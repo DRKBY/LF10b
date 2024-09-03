@@ -1,8 +1,48 @@
-version: '3.4'
+version: '3.8'
 
 services:
-  lf10b:
-    image: lf10b
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+  # Web Server
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./web/html:/usr/share/nginx/html
+    networks:
+      - backend
+
+  # Database Server
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: eHH
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - backend
+
+  # Email Server (MailHog for Testing)
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - backend
+
+  # DNS Server (dnsmasq)
+  dns:
+    image: jpillora/dnsmasq
+    ports:
+      - "53:53/udp"
+    volumes:
+      - ./dnsmasq.conf:/etc/dnsmasq.conf
+    networks:
+      - backend
+
+  # File Server (FTP)
+  ftp:
+    image: stilliard/pure-ftpd
+    ports:
+     
