@@ -1,18 +1,5 @@
 services:
-  db:
-    image: mysql:8.0
-    container_name: mysql-db
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: eHH
-      MYSQL_USER: ehh_user
-      MYSQL_PASSWORD: ehh_password
-    volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - ehh-net
-  
+
   mail:
     image: mailserver/docker-mailserver:latest
     hostname: mail
@@ -34,7 +21,39 @@ services:
       - DMS_DEBUG=0
     cap_add:
       - NET_ADMIN
+    networks:
+      - ehh-net
+
+  web:
+    build: ./nginx
+    container_name: webserver
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    networks:
+      - ehh-net
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
     restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: eHH
+      MYSQL_USER: ehh_user
+      MYSQL_PASSWORD: ehh_password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - ehh-net
+  
+  ftp:
+    build: ./vsftpd
+    container_name: ftp-server
+    ports:
+      - "21:21"
+      - "21100-21110:21100-21110"
     networks:
       - ehh-net
 
