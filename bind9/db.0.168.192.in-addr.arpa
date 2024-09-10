@@ -1,0 +1,16 @@
+$TTL    604800
+@       IN      SOA     ns1.eHH.de. admin.eHH.de. (
+                        2021091501  ; Serial
+                        604800      ; Refresh
+                        86400       ; Retry
+                        2419200     ; Expire
+                        604800 )    ; Negative Cache TTL
+
+; Nameserver
+@       IN      NS      ns1.eHH.de.
+
+; PTR Records
+2       IN      PTR     ns1.eHH.de.
+3       IN      PTR     www.eHH.de.
+4       IN      PTR     mail.eHH.de.
+5       IN      PTR     db.eHH.de.
