@@ -1,51 +1,22 @@
-version: '3'
+version: '3.1'
+
 services:
-  dns:
-    build: ./bind
-    ports:
-      - "53:53/udp"
-      - "53:53/tcp"
-    networks:
-      - ehh-net
-
-  web:
-    build: ./nginx
-    ports:
-      - "80:80"
-    networks:
-      - ehh-net
-
   db:
-    image: mysql:latest
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root_password
       MYSQL_DATABASE: eHH
+      MYSQL_USER: ehh_user
+      MYSQL_PASSWORD: ehh_password
     volumes:
-      - db-data:/var/lib/mysql
+      - db_data:/var/lib/mysql
     networks:
       - ehh-net
 
-  ftp:
-    build: ./vsftpd
-    ports:
-      - "20:20"
-      - "21:21"
-    networks:
-      - ehh-net
-
-  mail:
-    image: tvial/docker-mailserver
-    environment:
-      MAIL_USER: admin
-      MAIL_PASS: password
-    ports:
-      - "25:25"
-      - "143:143"
-    networks:
-      - ehh-net
+volumes:
+  db_data:
 
 networks:
   ehh-net:
-
-volumes:
-  db-data:
