@@ -1,48 +1,51 @@
-version: '3.8'
-
+version: '3'
 services:
-  # Web Server
-  web:
-    image: nginx:latest
-    ports:
-      - "80:80"
-    volumes:
-      - ./web/html:/usr/share/nginx/html
-    networks:
-      - backend
-
-  # Database Server
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: eHH
-    volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - backend
-
-  # Email Server (MailHog for Testing)
-  mail:
-    image: mailhog/mailhog
-    ports:
-      - "1025:1025"  # SMTP
-      - "8025:8025"  # Web UI
-    networks:
-      - backend
-
-  # DNS Server (dnsmasq)
   dns:
-    image: jpillora/dnsmasq
+    build: ./bind
     ports:
       - "53:53/udp"
-    volumes:
-      - ./dnsmasq.conf:/etc/dnsmasq.conf
+      - "53:53/tcp"
     networks:
-      - backend
+      - ehh-net
 
-  # File Server (FTP)
-  ftp:
-    image: stilliard/pure-ftpd
+  web:
+    build: ./nginx
     ports:
-     
+      - "80:80"
+    networks:
+      - ehh-net
+
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: eHH
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - ehh-net
+
+  ftp:
+    build: ./vsftpd
+    ports:
+      - "20:20"
+      - "21:21"
+    networks:
+      - ehh-net
+
+  mail:
+    image: tvial/docker-mailserver
+    environment:
+      MAIL_USER: admin
+      MAIL_PASS: password
+    ports:
+      - "25:25"
+      - "143:143"
+    networks:
+      - ehh-net
+
+networks:
+  ehh-net:
+
+volumes:
+  db-data:
