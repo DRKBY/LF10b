@@ -28,5 +28,6 @@
 .DS_Store
 Thumbs.db
 
+#Ingore mail server data
 mailstate/
 maildata/
