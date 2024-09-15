@@ -11,7 +11,7 @@ services:
       - "9090:9090"
 
   cadvisor:
-    image: google/cadvisor:latest
+    image: gcr.io/cadvisor/cadvisor:latest  # Multi-arch image supporting ARM and x86
     container_name: cadvisor
     ports:
       - "8080:8080"
@@ -19,6 +19,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /sys:/sys
       - /var/lib/docker/:/var/lib/docker/
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro  # Ensure cgroup access is still granted
 
   grafana:
     image: grafana/grafana:latest
