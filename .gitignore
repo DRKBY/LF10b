@@ -31,4 +31,5 @@ Thumbs.db
 #Ingore mail server data
 mailstate/
 maildata/
-postfix-spool
+postfix-spool/
+granfana/
