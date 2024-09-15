@@ -10,6 +10,16 @@ services:
     ports:
       - "9090:9090"
 
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /sys:/sys
+      - /var/lib/docker/:/var/lib/docker/
+
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
