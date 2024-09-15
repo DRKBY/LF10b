@@ -10,16 +10,28 @@ services:
     ports:
       - "9090:9090"
 
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest  # Multi-arch image supporting ARM and x86
-    container_name: cadvisor
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
     ports:
-      - "8080:8080"
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^(/rootfs|/host|/etc)($$|/)"'
+
+  docker-stats-exporter:
+    image: lekesoldat/docker-stats-exporter:latest
+    container_name: docker-stats-exporter
+    platform: linux/amd64
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /sys:/sys
-      - /var/lib/docker/:/var/lib/docker/
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro  # Ensure cgroup access is still granted
+    ports:
+      - "3069:3069"
 
   grafana:
     image: grafana/grafana:latest
