@@ -1,6 +1,3 @@
-
----
-
 ### **1. Einführung ins Monitoring**
 - **Warum Monitoring?** 
   - Ressourcenüberwachung (CPU, RAM)
@@ -48,5 +45,3 @@
 ### **5. Fazit und Q&A**
 - **Nutzen des Monitorings**: Übersichtliche Echtzeit-Daten, bessere Ressourcenauslastung.
 - **Offene Fragen**: Welche spezifischen Metriken sind für euch am wichtigsten?
-
----
